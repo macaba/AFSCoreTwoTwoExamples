@@ -6,5 +6,6 @@
 PROJECT_NAME := sine
 
 EXTRA_COMPONENT_DIRS += ../../ESP32AudioLibrary
+EXTRA_COMPONENT_DIRS += ../../AFSCoreTwoTwoLibrary
 include $(IDF_PATH)/make/project.mk
 
