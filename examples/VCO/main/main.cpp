@@ -1,4 +1,4 @@
-//Example: Sine
+//Example: VCO
 
 #include "Audio.h"
 #include <stdio.h>
@@ -6,9 +6,11 @@
 #include "freertos/task.h"
 #include "esp_system.h"
 #include "esp_spi_flash.h"
+#include "esp_log.h"
 
 AudioControlI2S          i2s;
 AudioControlPCM3060      pcm3060;
+AudioControlAFSTwoTwo    afs22;
 
 // GUItool: begin automatically generated code
 AudioSynthWaveformSine   sine1;          //xy=398,548
@@ -35,6 +37,14 @@ void audioTask( void * parameter )
   }
 }
 
+void controlTask (void * parameter )
+{
+  for(;;){
+    
+    vTaskDelay(50/portTICK_RATE_MS);    
+  }
+}
+
 extern "C" {
    void app_main();
 }
@@ -56,16 +66,15 @@ void app_main()
 
     AudioMemory(10);
     i2s.default_codec_rx_tx_24bit();
-    vTaskDelay(1000/portTICK_RATE_MS);
+    afs22.init();
     pcm3060.init();
-    sine1.frequency(440);
+
+    sine1.frequency(220);
     sine1.amplitude(0.1);
-    sine2.frequency(880);
+    sine2.frequency(440);
     sine2.amplitude(0.1);
-    calibrationOutL.calibrate(0, 0.0156, 10, 11.34);
-    calibrationOutR.calibrate(0, 0.069, 10, 11.372);
-    calibrationInL.calibrate(0, -0.000757, 1, 0.958241);
-    calibrationInR.calibrate(0, -0.000757, 1, 0.958241);    //Made up these values
  
     xTaskCreatePinnedToCore(audioTask, "AudioTask", 10000, NULL, configMAX_PRIORITIES - 1, NULL, 1);
+    xTaskCreatePinnedToCore(controlTask, "ControlTask", 2000, NULL, 1, NULL, 1);
+    afs22.calibrate(&calibrationInL, &calibrationOutL, &calibrationInR, &calibrationOutR);
 }
