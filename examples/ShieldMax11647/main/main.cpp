@@ -1,7 +1,7 @@
-//Example: Sine
+//Example: ShieldMax11647
 
 #include "Audio.h"
-#include "Audio_AFSCoreTwoTwo.h"
+#include "Audio_AFS.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -11,7 +11,8 @@
 
 AudioControlI2S          i2s;
 AudioControlPCM3060      pcm3060;
-AudioControlAFSTwoTwo    afs22;
+AudioControlAFSCoreTwoTwo    afs22;
+AudioShieldMax11647      shield;
 
 // GUItool: begin automatically generated code
 AudioSynthWaveformSine   sine1;          //xy=398,548
@@ -41,7 +42,15 @@ void audioTask( void * parameter )
 void controlTask (void * parameter )
 {
   for(;;){
-    
+    if(afs22.calibrated)
+    {
+      shield.update();
+      sine1.frequency(shield.ain0/2);
+      sine2.frequency(shield.ain0/2);
+      float volume = shield.ain1/8192.0;    //Scale it to a 0 - 0.5 range
+      sine1.amplitude(volume);
+      sine2.amplitude(volume);
+    }
     vTaskDelay(50/portTICK_RATE_MS);    
   }
 }
@@ -66,13 +75,14 @@ void app_main()
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     AudioMemory(10);
-    i2s.default_codec_rx_tx_24bit();
+    i2s.init_default_codec_rx_tx_24bit();
     afs22.init();
     pcm3060.init();
+    shield.init();
 
     sine1.frequency(220);
     sine1.amplitude(0.1);
-    sine2.frequency(440);
+    sine2.frequency(220);
     sine2.amplitude(0.1);
  
     xTaskCreatePinnedToCore(audioTask, "AudioTask", 10000, NULL, configMAX_PRIORITIES - 1, NULL, 1);

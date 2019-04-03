@@ -1,6 +1,7 @@
 //Example: VCO
 
 #include "Audio.h"
+#include "Audio_AFSCoreTwoTwo.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"

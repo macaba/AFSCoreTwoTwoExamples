@@ -1,6 +1,7 @@
 //Example: SdMmcPlayer
 
 #include "Audio.h"
+#include "Audio_AFS.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -11,6 +12,8 @@
 
 AudioControlI2S          i2s;
 AudioControlPCM3060      pcm3060;
+AudioControlAFSCoreTwoTwo    afs22;
+AudioShieldMax11647      shield;
 
 // GUItool: begin automatically generated code
 AudioInputI2S            i2sInput;           //xy=401,596
@@ -35,6 +38,23 @@ void audioTask( void * parameter )
   AudioStream *p;  
   for(;;){
     p->update_all();    
+  }
+}
+
+void controlTask (void * parameter )
+{
+  for(;;){
+    //if(afs22.calibrated)
+    //{
+      shield.readAnalogInputs();
+      float volume = shield.ain0/8192.0;    //Scale it to a 0 - 0.5 range
+      mixerLeft.gain(1, volume);
+      mixerRight.gain(1, volume);
+      volume = shield.ain1/8192.0;    //Scale it to a 0 - 0.5 range
+      mixerLeft.gain(2, volume);
+      mixerRight.gain(2, volume);
+    //}
+    vTaskDelay(50/portTICK_RATE_MS);    
   }
 }
 
@@ -79,9 +99,11 @@ void app_main()
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     AudioMemory(10);
-    i2s.default_codec_rx_tx_24bit();
-    vTaskDelay(1000/portTICK_RATE_MS);
+    i2s.init_default_codec_rx_tx_24bit();
+    afs22.init();
     pcm3060.init();
+    shield.init();
+
     mixerLeft.gain(0, 0.3);
     mixerRight.gain(0, 0.3);
     mixerLeft.gain(1, 0.05);
@@ -92,4 +114,5 @@ void app_main()
     xTaskCreatePinnedToCore(audioTask, "AudioTask", 10000, NULL, configMAX_PRIORITIES - 1, NULL, 1);
     xTaskCreatePinnedToCore(displayTask, "DisplayTask", 10000, NULL, 2, NULL, 1);
     xTaskCreatePinnedToCore(playTask, "PlayTask", 10000, NULL, 2, NULL, 1);
+    xTaskCreatePinnedToCore(controlTask, "ControlTask", 10000, NULL, 2, NULL, 1);
 }

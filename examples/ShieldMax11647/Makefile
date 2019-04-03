@@ -3,10 +3,9 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := vco
+PROJECT_NAME := shieldmax11647
 
 EXTRA_COMPONENT_DIRS += ../../ESP32AudioLibrary
 EXTRA_COMPONENT_DIRS += ../../AFSCoreTwoTwoLibrary
-EXCLUDE_COMPONENTS := openssl aws_iot bt coap esp_https_server
 include $(IDF_PATH)/make/project.mk
 
