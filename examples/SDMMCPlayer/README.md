@@ -1,5 +1,7 @@
-# Sine Example
+# SDMMCPlayer Example
 
-Outputs a sine wave to the I2S output
+Outputs a wav file to the I2S output
+
+## make menuconfig
 
 Component config → FAT Filesystem support → Long filename support
