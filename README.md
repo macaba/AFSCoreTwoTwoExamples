@@ -2,6 +2,12 @@
 
 ## Useful commands
 
+`menuconfig`
+
+`make flash`
+
+`make monitor`
+
 `git clone --recursive https://github.com/macaba/AFSCoreTwoTwoExamples.git`
 
 `git submodule update --recursive --remote`
