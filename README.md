@@ -1,4 +1,4 @@
-# AFSCoreTwoTwoExamples
+# AFSTwoTwoExamples
 
 ## Useful commands
 
