@@ -1,7 +1,7 @@
 //Example: Sine
 
 #include "Audio.h"
-#include "Audio_AFSCoreTwoTwo.h"
+#include "Audio_AFS.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -40,9 +40,12 @@ void audioTask( void * parameter )
 
 void controlTask (void * parameter )
 {
+	vTaskDelay(2000/portTICK_RATE_MS); 
   for(;;){
-    
-    vTaskDelay(50/portTICK_RATE_MS);    
+    afs22.mute();
+    vTaskDelay(1000/portTICK_RATE_MS);  
+	afs22.unmute();
+	vTaskDelay(1000/portTICK_RATE_MS);  	
   }
 }
 
@@ -66,14 +69,14 @@ void app_main()
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     AudioMemory(10);
-    i2s.default_codec_rx_tx_24bit();
+    i2s.init_default_codec_rx_tx_24bit();
     afs22.init();
     pcm3060.init();
 
     sine1.frequency(220);
-    sine1.amplitude(0.1);
+    sine1.amplitude(0.0447);
     sine2.frequency(440);
-    sine2.amplitude(0.1);
+    sine2.amplitude(0.000447);		//−10 dBV
  
     xTaskCreatePinnedToCore(audioTask, "AudioTask", 10000, NULL, configMAX_PRIORITIES - 1, NULL, 1);
     xTaskCreatePinnedToCore(controlTask, "ControlTask", 2000, NULL, 1, NULL, 1);

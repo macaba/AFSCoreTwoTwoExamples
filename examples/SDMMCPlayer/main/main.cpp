@@ -12,7 +12,7 @@
 
 AudioControlI2S          i2s;
 AudioControlPCM3060      pcm3060;
-AudioControlAFSCoreTwoTwo    afs22;
+AudioControlAFSTwoTwo    afs22;
 AudioShieldMax11647      shield;
 
 // GUItool: begin automatically generated code

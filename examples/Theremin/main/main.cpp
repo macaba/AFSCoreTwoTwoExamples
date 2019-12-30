@@ -255,7 +255,7 @@ void app_main()
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     AudioMemory(10);
-    i2s.default_codec_rx_tx_24bit();
+    i2s.init_default_codec_rx_tx_24bit();
     vTaskDelay(1000/portTICK_RATE_MS);
     pcm3060.init();
 

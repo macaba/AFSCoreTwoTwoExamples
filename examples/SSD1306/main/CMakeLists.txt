@@ -5,7 +5,7 @@
 #include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 #project(sine)
 
-idf_component_register(SRCS "main.cpp"
+idf_component_register(SRCS main.cpp fonts.c ssd1306.c xi2c.c
                     INCLUDE_DIRS ".")
 
 #set(COMPONENT_SRCS "main.cpp")

@@ -1,7 +1,7 @@
 //Example: VCO
 
 #include "Audio.h"
-#include "Audio_AFSCoreTwoTwo.h"
+#include "Audio_AFS.h"
 #include <stdio.h>
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
@@ -66,7 +66,7 @@ void app_main()
             (chip_info.features & CHIP_FEATURE_EMB_FLASH) ? "embedded" : "external");
 
     AudioMemory(10);
-    i2s.default_codec_rx_tx_24bit();
+    i2s.init_default_codec_rx_tx_24bit();
     afs22.init();
     pcm3060.init();
 
